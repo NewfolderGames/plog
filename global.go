@@ -18,6 +18,13 @@ func SetFlag(flag int64) {
 
 }
 
+// SetCallerDepth sets the runtime caller depth for the global logger instance.
+func SetCallerDepth(depth int) {
+
+	instance.SetCallerDepth(depth)
+
+}
+
 // Info prints an info log.
 func Info(format string, args ...any) int {
 

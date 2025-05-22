@@ -20,14 +20,19 @@ const FLAG_HIDE_DATE = 1 << 1
 
 // Plog is a structured logger that writes log entries to an io.Writer with optional flags for controlling log output.
 type Plog struct {
-	flag   int64
-	writer io.Writer
+	flag        int64
+	callerDepth int
+	writer      io.Writer
 }
 
 // New creates a new pLog instance.
 func New(writer io.Writer, flag int64) *Plog {
 
-	return &Plog{flag: flag, writer: writer}
+	return &Plog{
+		flag:        flag,
+		callerDepth: 2,
+		writer:      writer,
+	}
 
 }
 
@@ -45,6 +50,13 @@ func (plog *Plog) SetFlag(flag int64) {
 
 }
 
+// SetCallerDepth sets the runtime caller depth of the instance.
+func (plog *Plog) SetCallerDepth(depth int) {
+
+	plog.callerDepth = depth
+
+}
+
 // base is a base method for printing a log.
 func (plog *Plog) base(level string, format string, a ...any) int {
 
@@ -53,7 +65,7 @@ func (plog *Plog) base(level string, format string, a ...any) int {
 
 	if plog.flag&FLAG_HIDE_FILENAME == 0 {
 
-		_, fileName, lineNum, _ := runtime.Caller(2)
+		_, fileName, lineNum, _ := runtime.Caller(plog.callerDepth)
 		fileString = fmt.Sprintf(" \x1b[90m%s:%d\x1b[0m", fileName, lineNum)
 
 	}

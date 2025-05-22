@@ -55,3 +55,13 @@ func TestOutputGlobalHideDate(t *testing.T) {
 	Error("%s", "hello")
 
 }
+
+func TestCallerDepth(t *testing.T) {
+
+	SetCallerDepth(1)
+	Info("%s", "hello")
+	Debug("%s", "hello")
+	Warn("%s", "hello")
+	Error("%s", "hello")
+
+}
